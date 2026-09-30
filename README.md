@@ -22,7 +22,7 @@ The Municipal Financial Management System (MFMS) is a foundational console appli
 | Joyce Nghilifavali | 225041049 | Employee Management (`employees.c`, `employees.h`) |
 | Rosina Lita | 226042316 | Budget Management (`budget.c`, `budget.h`) |
 | Ipinge Krobinian | 223030015 | Supplier Management (`suppliers.c`, `suppliers.h`) |
-| [Student 4 Name] | [Student 4 ID] | Asset Management (`assets.c`, `assets.h`) |
+| [Josef Andreas] | [221083685] | Asset Management (`assets.c`, `assets.h`) |
 | Jona Johannes | 225047888 | System Reports (`reports.c`, `reports.h`) |
 | Sirkka Mudjanima | 225031086 | System Integration & Validation (`main.c`) |
 | Johannes Jason | 2250352836 | Testing, Documentation, Build Scripts, & Git |
