@@ -1,96 +1,64 @@
 #include <stdio.h>
 #include "reports.h"
 #include "assets.h"
+#include "budget.h"
+#include "employees.h"
+#include "suppliers.h"
 
-extern Asset assets[MAX_ASSETS];
-extern int assetCount;
-typedef struct {
-    int id;
-    char name[50];
-    float basicSalary;
-} Employee;
- 
-Employee sampleEmployees[] = {
-    {1, "John Doe", 12000},
-    {2, "Jane Smith", 18500},
-    {3, "Peter Shikongo", 8500},
-    {4, "Maria Amutenya", 42000},
-    {5, "Ndapewa Iileka", 15000}
-};
-int sampleEmployeeCount = 5;
-void employeeReport() {
-    if (sampleEmployeeCount == 0) {
-        printf("No employees to report.\n");
+void employeeReport(void) {
+    if (employeeCount == 0) {
+        printf("\n=== EMPLOYEE REPORT ===\nNo employees to report.\n");
         return;
     }
     float total = 0;
-    float highest = sampleEmployees[0].basicSalary;
-    float lowest = sampleEmployees[0].basicSalary;
-    for (int i = 0; i < sampleEmployeeCount; i++) {
-        float salary = sampleEmployees[i].basicSalary;
+    float highest = basicSalary[0];
+    float lowest = basicSalary[0];
+
+    for (int i = 0; i < employeeCount; i++) {
+        float salary = basicSalary[i];
         total += salary;
         if (salary > highest) highest = salary;
         if (salary < lowest) lowest = salary;
-    float average = total / sampleEmployeeCount;
+    }
+
+    float average = total / employeeCount;
     printf("\n=== EMPLOYEE REPORT ===\n");
-    printf("Total Employees: %d\n", sampleEmployeeCount);
-    printf("Average Salary: N$%.2f\n", average);
-    printf("Highest Salary: N$%.2f\n", highest);
-    printf("Lowest Salary: N$%.2f\n", lowest);
+    printf("Total Employees: %d\n", employeeCount);
+    printf("Average Basic Salary: N$%.2f\n", average);
+    printf("Highest Basic Salary: N$%.2f\n", highest);
+    printf("Lowest Basic Salary: N$%.2f\n", lowest);
 }
-    char department[30];
-    float allocated;
-    float expenditure;
-} Budget;
-Budget sampleBudgets[] = {
-    {"Finance", 500000, 420000},
-    {"Health", 300000, 310000},
-    {"Roads", 700000, 650000}
-int sampleBudgetCount = 3;
-void budgetReport() {
-    if (sampleBudgetCount == 0) {
-        printf("No budget data to report.\n");
-    float totalAllocated = 0, totalExpenditure = 0;
+
+void budgetReport(void) {
     printf("\n=== BUDGET REPORT ===\n");
-    for (int i = 0; i < sampleBudgetCount; i++) {
-        totalAllocated += sampleBudgets[i].allocated;
-        totalExpenditure += sampleBudgets[i].expenditure;
-        float remaining = sampleBudgets[i].allocated - sampleBudgets[i].expenditure;
-        printf("%s: Allocated N$%.2f | Spent N$%.2f | Remaining N$%.2f",
-               sampleBudgets[i].department, sampleBudgets[i].allocated,
-               sampleBudgets[i].expenditure, remaining);
-        if (remaining < 0)
-            printf(" -- OVER BUDGET\n");
-        else
-            printf(" -- WITHIN BUDGET\n");
-    printf("\nTotal Allocated: N$%.2f\n", totalAllocated);
-    printf("Total Expenditure: N$%.2f\n", totalExpenditure);
-    printf("Total Remaining: N$%.2f\n", totalAllocated - totalExpenditure);
-    int supplierID;
-    char email[50];
-    char phone[20];
-    char town[30];
-} Supplier;
-Supplier sampleSuppliers[] = {
-    {1, "BuildRight Ltd", "info@buildright.com", "0811234567", "Windhoek"},
-    {2, "SteelWorks Namibia", "sales@steelworks.na", "0817654321", "Walvis Bay"}
-int sampleSupplierCount = 2;
-void supplierReport() {
-    if (sampleSupplierCount == 0) {
-        printf("No suppliers registered.\n");
+    if (deptCount == 0) {
+        printf("No budget records found.\n");
+        return;
+    }
+    double totalAllocated = 0.0;
+    for (int i = 0; i < deptCount; i++) {
+        totalAllocated += departments[i].allocated;
+    }
+    printf("Total Departments Registered: %d\n", deptCount);
+    printf("Total Budget Allocated: N$%.2f\n", totalAllocated);
+}
+
+void supplierReport(void) {
     printf("\n=== SUPPLIER REPORT ===\n");
-    for (int i = 0; i < sampleSupplierCount; i++) {
-        printf("ID: %d | %s | %s | %s | %s\n",
-               sampleSuppliers[i].supplierID, sampleSuppliers[i].name,
-               sampleSuppliers[i].email, sampleSuppliers[i].phone,
-               sampleSuppliers[i].town);
-void assetReport() {
-    if (assetCount == 0) {
-        printf("No assets registered.\n");
+    if (supplierCount == 0) {
+        printf("No supplier records found.\n");
+        return;
+    }
+    printf("Total Suppliers: %d\n", supplierCount);
+}
+
+void displayAssetReport(void) {
     printf("\n=== ASSET REPORT ===\n");
-    for (int i = 0; i < assetCount; i++) {
-        printf("ID: %d | %s | %s | N$%.2f | %s | %s\n",
-               assets[i].assetId, assets[i].assetName,
-               assets[i].category, assets[i].value,
-               assets[i].location, assets[i].status);
-}#include "assets.h"
+    int count = getAssetCount();
+    if (count == 0) {
+        printf("No asset records found.\n");
+        return;
+    }
+    printf("Total Assets: %d\n", count);
+    printf("Total Asset Value: N$%.2f\n", getTotalAssetValue());
+}

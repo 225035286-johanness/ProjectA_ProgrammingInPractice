@@ -15,15 +15,9 @@ extern Department departments[MAX_DEPARTMENTS];
 extern int deptCount;
 
 void calculateBudget(Department *d);
-void addDepartment();
-void displayDepartments();
-void searchDepartment();
+void addDepartment(void);
+void displayDepartments(void);
+void searchDepartment(void);
+void budgetMenu(void);
 
 #endif
-
-
-
-
-
-
-

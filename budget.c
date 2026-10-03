@@ -1,15 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-
-#define MAX_DEPARTMENTS 10
-
-typedef struct {
-    char name[50];
-    double allocated;
-    double spent;
-    double remaining;
-    char status[20];
-} Department;
+#include "budget.h"
 
 Department departments[MAX_DEPARTMENTS];
 int deptCount = 0;
@@ -23,7 +14,7 @@ void calculateBudget(Department *d) {
     }
 }
 
-void addDepartment() {
+void addDepartment(void) {
     if (deptCount >= MAX_DEPARTMENTS) {
         printf("Limit reached.\n");
         return;
@@ -53,7 +44,7 @@ void addDepartment() {
     printf("Department added.\n");
 }
 
-void displayDepartments() {
+void displayDepartments(void) {
     if (deptCount == 0) {
         printf("\nNo records.\n");
         return;
@@ -68,7 +59,7 @@ void displayDepartments() {
     }
 }
 
-void searchDepartment() {
+void searchDepartment(void) {
     char search[50];
     int found = 0;
 
@@ -92,13 +83,14 @@ void searchDepartment() {
     }
 }
 
-int main() {
+void budgetMenu(void) {
     int choice;
     do {
         printf("\n--- Budget Management ---\n");
         printf("1. Add Department\n");
         printf("2. Display Departments\n");
         printf("3. Search Department\n");
+        printf("4. Return to Main Menu\n");
         
         printf("Choice: ");
         scanf("%d", &choice);
@@ -107,11 +99,8 @@ int main() {
             case 1: addDepartment(); break;
             case 2: displayDepartments(); break;
             case 3: searchDepartment(); break;
-            
+            case 4: return;
             default: printf("Invalid choice.\n");
         }
-    } while (choice >= 1 && choice <= 3);
-
-    return 0;
+    } while (choice != 4);
 }
-

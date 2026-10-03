@@ -2,9 +2,6 @@
 #include <string.h>
 #include "employees.h"
 
-#define MAX_EMPLOYEES 100
-
-/* Employee information arrays */
 char employeeID[MAX_EMPLOYEES][20];
 char employeeName[MAX_EMPLOYEES][100];
 char department[MAX_EMPLOYEES][50];
@@ -15,301 +12,99 @@ float transportAllowance[MAX_EMPLOYEES];
 
 int employeeCount = 0;
 
-
-/* =========================================
-   REMOVE NEWLINE FROM TEXT
-   ========================================= */
-
-void removeNewline(char text[])
-{
-    text[strcspn(text, "\n")] = '\0';
+void removeNewline(char text[]) {
+    int len = strlen(text);
+    if (len > 0 && text[len - 1] == '\n') {
+        text[len - 1] = '\0';
+    }
 }
 
-
-/* =========================================
-   ADD EMPLOYEE
-   ========================================= */
-
-void addEmployee(void)
-{
-    if (employeeCount >= MAX_EMPLOYEES)
-    {
-        printf("\nEmployee list is full.\n");
+void addEmployee(void) {
+    if (employeeCount >= MAX_EMPLOYEES) {
+        printf("System full!\n");
         return;
     }
 
-    printf("\n========== ADD EMPLOYEE ==========\n");
-
-    printf("Enter Employee ID: ");
-    scanf("%19s", employeeID[employeeCount]);
-
-    /* Check for duplicate Employee ID */
-    for (int i = 0; i < employeeCount; i++)
-    {
-        if (strcmp(employeeID[i], employeeID[employeeCount]) == 0)
-        {
-            printf("\nError: Employee ID already exists.\n");
-            return;
-        }
-    }
-
-    /* Clear newline left by scanf */
-    getchar();
+    printf("\nEnter Employee ID: ");
+    fgets(employeeID[employeeCount], 20, stdin);
+    removeNewline(employeeID[employeeCount]);
 
     printf("Enter Employee Name: ");
-    fgets(employeeName[employeeCount],
-          sizeof(employeeName[employeeCount]),
-          stdin);
-
+    fgets(employeeName[employeeCount], 100, stdin);
     removeNewline(employeeName[employeeCount]);
 
-    if (strlen(employeeName[employeeCount]) == 0)
-    {
-        printf("Employee name cannot be empty.\n");
-        return;
-    }
-
     printf("Enter Department: ");
-    fgets(department[employeeCount],
-          sizeof(department[employeeCount]),
-          stdin);
-
+    fgets(department[employeeCount], 50, stdin);
     removeNewline(department[employeeCount]);
 
-    if (strlen(department[employeeCount]) == 0)
-    {
-        printf("Department cannot be empty.\n");
-        return;
-    }
-
-    printf("Enter Basic Salary: ");
+    printf("Enter Basic Salary: N$");
     scanf("%f", &basicSalary[employeeCount]);
 
-    if (basicSalary[employeeCount] < 0)
-    {
-        printf("Basic salary cannot be negative.\n");
-        return;
-    }
-
-    printf("Enter Housing Allowance: ");
+    printf("Enter Housing Allowance: N$");
     scanf("%f", &housingAllowance[employeeCount]);
 
-    if (housingAllowance[employeeCount] < 0)
-    {
-        printf("Housing allowance cannot be negative.\n");
-        return;
-    }
-
-    printf("Enter Transport Allowance: ");
+    printf("Enter Transport Allowance: N$");
     scanf("%f", &transportAllowance[employeeCount]);
-
-    if (transportAllowance[employeeCount] < 0)
-    {
-        printf("Transport allowance cannot be negative.\n");
-        return;
-    }
+    getchar();
 
     employeeCount++;
-
-    printf("\nEmployee added successfully!\n");
+    printf("Employee added successfully!\n");
 }
 
-
-/* =========================================
-   DISPLAY EMPLOYEES
-   ========================================= */
-
-void displayEmployees(void)
-{
-    if (employeeCount == 0)
-    {
-        printf("\nNo employees have been registered.\n");
+void displayEmployees(void) {
+    if (employeeCount == 0) {
+        printf("\nNo employees found.\n");
         return;
     }
 
-    printf("\n========== EMPLOYEE LIST ==========\n");
+    printf("\n%-10s %-20s %-15s %-12s %-12s %-12s %-12s\n",
+           "ID", "Name", "Department", "Basic", "Housing", "Transport", "Gross");
+    printf("-----------------------------------------------------------------------------------------\n");
 
-    for (int i = 0; i < employeeCount; i++)
-    {
-        printf("\nEmployee %d\n", i + 1);
-        printf("-------------------------------\n");
-
-        printf("ID: %s\n", employeeID[i]);
-        printf("Name: %s\n", employeeName[i]);
-        printf("Department: %s\n", department[i]);
-
-        printf("Basic Salary: N$ %.2f\n",
-               basicSalary[i]);
-
-        printf("Housing Allowance: N$ %.2f\n",
-               housingAllowance[i]);
-
-        printf("Transport Allowance: N$ %.2f\n",
-               transportAllowance[i]);
-
-        printf("Gross Salary: N$ %.2f\n",
-               basicSalary[i]
-               + housingAllowance[i]
-               + transportAllowance[i]);
+    for (int i = 0; i < employeeCount; i++) {
+        float gross = basicSalary[i] + housingAllowance[i] + transportAllowance[i];
+        printf("%-10s %-20s %-15s N$%-10.2f N$%-10.2f N$%-10.2f N$%-10.2f\n",
+               employeeID[i], employeeName[i], department[i],
+               basicSalary[i], housingAllowance[i], transportAllowance[i], gross);
     }
 }
 
-
-/* =========================================
-   SEARCH EMPLOYEE
-   ========================================= */
-
-void searchEmployee(void)
-{
+void searchEmployee(void) {
     char searchID[20];
+    printf("\nEnter Employee ID to search: ");
+    fgets(searchID, 20, stdin);
+    removeNewline(searchID);
 
-    if (employeeCount == 0)
-    {
-        printf("\nNo employees have been registered.\n");
-        return;
-    }
-
-    printf("\n========== SEARCH EMPLOYEE ==========\n");
-
-    printf("Enter Employee ID: ");
-    scanf("%19s", searchID);
-
-    for (int i = 0; i < employeeCount; i++)
-    {
-        if (strcmp(employeeID[i], searchID) == 0)
-        {
-            printf("\nEmployee Found!\n");
-            printf("-------------------------------\n");
-
-            printf("ID: %s\n",
-                   employeeID[i]);
-
-            printf("Name: %s\n",
-                   employeeName[i]);
-
-            printf("Department: %s\n",
-                   department[i]);
-
-            printf("Basic Salary: N$ %.2f\n",
-                   basicSalary[i]);
-
-            printf("Housing Allowance: N$ %.2f\n",
-                   housingAllowance[i]);
-
-            printf("Transport Allowance: N$ %.2f\n",
-                   transportAllowance[i]);
-
+    for (int i = 0; i < employeeCount; i++) {
+        if (strcmp(employeeID[i], searchID) == 0) {
+            float gross = basicSalary[i] + housingAllowance[i] + transportAllowance[i];
+            printf("\nEmployee Found:\n");
+            printf("ID: %s\nName: %s\nDept: %s\nGross Salary: N$%.2f\n",
+                   employeeID[i], employeeName[i], department[i], gross);
             return;
         }
     }
-
-    printf("\nEmployee ID not found.\n");
+    printf("Employee not found.\n");
 }
 
-
-/* =========================================
-   CALCULATE EMPLOYEE SALARY
-   ========================================= */
-
-void calculateSalary(void)
-{
-    char searchID[20];
-
-    if (employeeCount == 0)
-    {
-        printf("\nNo employees have been registered.\n");
-        return;
-    }
-
-    printf("\n========== CALCULATE SALARY ==========\n");
-
-    printf("Enter Employee ID: ");
-    scanf("%19s", searchID);
-
-    for (int i = 0; i < employeeCount; i++)
-    {
-        if (strcmp(employeeID[i], searchID) == 0)
-        {
-            float grossSalary;
-
-            grossSalary =
-                basicSalary[i]
-                + housingAllowance[i]
-                + transportAllowance[i];
-
-            printf("\nEmployee: %s\n",
-                   employeeName[i]);
-
-            printf("Basic Salary: N$ %.2f\n",
-                   basicSalary[i]);
-
-            printf("Housing Allowance: N$ %.2f\n",
-                   housingAllowance[i]);
-
-            printf("Transport Allowance: N$ %.2f\n",
-                   transportAllowance[i]);
-
-            printf("-------------------------------\n");
-
-            printf("Gross Salary: N$ %.2f\n",
-                   grossSalary);
-
-            return;
-        }
-    }
-
-    printf("\nEmployee ID not found.\n");
-}
-
-
-/* =========================================
-   EMPLOYEE MENU
-   ========================================= */
-
-void employeeMenu(void)
-{
+void employeeMenu(void) {
     int choice;
-
-    do
-    {
-        printf("\n================================\n");
-        printf("       EMPLOYEE MANAGEMENT\n");
-        printf("================================\n");
-
+    do {
+        printf("\n--- EMPLOYEE MANAGEMENT ---\n");
         printf("1. Add Employee\n");
-        printf("2. Display Employees\n");
+        printf("2. Display All Employees\n");
         printf("3. Search Employee\n");
-        printf("4. Calculate Salary\n");
-        printf("5. Return to Main Menu\n");
-
-        printf("\nEnter choice: ");
+        printf("4. Return to Main Menu\n");
+        printf("Choice: ");
         scanf("%d", &choice);
+        getchar();
 
-        switch (choice)
-        {
-            case 1:
-                addEmployee();
-                break;
-
-            case 2:
-                displayEmployees();
-                break;
-
-            case 3:
-                searchEmployee();
-                break;
-
-            case 4:
-                calculateSalary();
-                break;
-
-            case 5:
-                printf("\nReturning to Main Menu...\n");
-                break;
-
-            default:
-                printf("\nInvalid choice. Please enter 1-5.\n");
+        switch (choice) {
+            case 1: addEmployee(); break;
+            case 2: displayEmployees(); break;
+            case 3: searchEmployee(); break;
+            case 4: return;
+            default: printf("Invalid option.\n");
         }
-
-    } while (choice != 5);
+    } while (choice != 4);
 }

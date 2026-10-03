@@ -1,5 +1,10 @@
 #include <stdio.h>
 #include "validation.h"
+#include "employees.h"
+#include "budget.h"
+#include "suppliers.h"
+#include "assets.h"
+#include "reports.h"
 
 int main(void) {
     int choice;
@@ -19,19 +24,22 @@ int main(void) {
 
         switch (choice) {
             case 1:
-                printf("\n--- Employee Management ---\n");
+                employeeMenu();
                 break;
             case 2:
-                printf("\n--- Budget Management ---\n");
+                budgetMenu();
                 break;
             case 3:
-                printf("\n--- Supplier Management ---\n");
+                supplierMenu();
                 break;
             case 4:
-                printf("\n--- Asset Management ---\n");
+                assetMenu();
                 break;
             case 5:
-                printf("\n--- Reports ---\n");
+                employeeReport();
+                budgetReport();
+                supplierReport();
+                displayAssetReport();
                 break;
             case 6:
                 printf("\nExiting system. Goodbye!\n");
