@@ -1,131 +1,16 @@
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 #include "assets.h"
-
-Asset assets[100];
-int assetCount = 0;
-
-void saveAssetsToFile() {
-    FILE *fp = fopen("assets.txt", "w");
-    if(fp == NULL) return;
-    for(int i=0; i<assetCount; i++) {
-        fprintf(fp, "%d,%s,%s,%s,%.2f,%s,%s\n",
-            assets[i].assetId, assets[i].assetName, assets[i].category,
-            assets[i].location, assets[i].value, assets[i].purchaseDate, assets[i].status);
-    }
-    fclose(fp);
-}
-
-void loadAssetsFromFile() {
-    FILE *fp = fopen("assets.txt", "r");
-    if(fp == NULL) return;
-    assetCount = 0;
-    while(fscanf(fp, "%d,%49[^,],%29[^,],%29[^,],%lf,%14[^,],%19[^\n]\n",
-        &assets[assetCount].assetId, assets[assetCount].assetName, assets[assetCount].category,
-        assets[assetCount].location, &assets[assetCount].value, assets[assetCount].purchaseDate, assets[assetCount].status) == 7) {
-        assetCount++;
-    }
-    fclose(fp);
-}
-
-void addAsset() {
-    if(assetCount >= 100) {
-        printf("Storage full!\n");
-        return;
-    }
-    Asset a;
-    printf("\nEnter Asset ID: ");
-    scanf("%d", &a.assetId);
-    getchar();
-    printf("Enter Asset Name: ");
-    fgets(a.assetName, 50, stdin);
-    a.assetName[strcspn(a.assetName, "\n")] = 0;
-    printf("Enter Category (Vehicle/Equipment/Building/IT): ");
-    fgets(a.category, 30, stdin);
-    a.category[strcspn(a.category, "\n")] = 0;
-    printf("Enter Location (Windhoek Central, Katutura, etc): ");
-    fgets(a.location, 30, stdin);
-    a.location[strcspn(a.location, "\n")] = 0;
-    printf("Enter Value (N$): ");
-    scanf("%lf", &a.value);
-    getchar();
-    printf("Enter Purchase Date (DD/MM/YYYY): ");
-    fgets(a.purchaseDate, 15, stdin);
-    a.purchaseDate[strcspn(a.purchaseDate, "\n")] = 0;
-    strcpy(a.status, "Active");
-    assets[assetCount++] = a;
-    saveAssetsToFile();
-    printf("Asset added! Total: %d\n", assetCount);
-}
-
-void viewAssets() {
-    if(assetCount == 0) {
-        printf("\nNo assets found!\n");
-        return;
-    }
-    printf("\n%-5s %-20s %-15s %-15s %-10s %-12s\n", "ID", "Name", "Category", "Location", "Value", "Status");
-    printf("--------------------------------------------------------------------------------\n");
-    for(int i=0; i<assetCount; i++) {
-        printf("%-5d %-20s %-15s %-15s N$%-8.2f %-12s\n",
-            assets[i].assetId, assets[i].assetName, assets[i].category,
-            assets[i].location, assets[i].value, assets[i].status);
-    }
-}
-
-void searchAsset() {
-    int id;
-    printf("Enter Asset ID to search: ");
-    scanf("%d", &id);
-    for(int i=0; i<assetCount; i++) {
-        if(assets[i].assetId == id) {
-            printf("\nFound: %s | %s | %s | N$%.2f | %s\n",
-                assets[i].assetName, assets[i].category, assets[i].location,
-                assets[i].value, assets[i].status);
-            return;
-        }
-    }
-    printf("Asset ID %d not found!\n", id);
-}
-
-void updateAssetStatus() {
-    int id;
-    printf("Enter Asset ID to update: ");
-    scanf("%d", &id);
-    getchar();
-    for(int i=0; i<assetCount; i++) {
-        if(assets[i].assetId == id) {
-            printf("Current Status: %s\n", assets[i].status);
-            printf("Enter New Status (Active/Maintenance/Disposed): ");
-            fgets(assets[i].status, 20, stdin);
-            assets[i].status[strcspn(assets[i].status, "\n")] = 0;
-            saveAssetsToFile();
-            printf("Status updated!\n");
-            return;
-        }
-    }
-    printf("Asset not found!\n");
-}
-
-void manageAssets() {
-    int choice;
-    loadAssetsFromFile();
-    do {
-        printf("\n--- ASSET MANAGEMENT - Windhoek ---\n");
-        printf("1. Add New Asset\n");
-        printf("2. View All Assets\n");
-        printf("3. Search Asset\n");
-        printf("4. Update Asset Status\n");
-        printf("5. Back to Main Menu\n");
-        printf("Enter choice: ");
-        scanf("%d", &choice);
-        getchar();
-        switch(choice) {
-            case 1: addAsset(); break;
-            case 2: viewAssets(); break;
-            case 3: searchAsset(); break;
-            case 4: updateAssetStatus(); break;
-            case 5: printf("Returning...\n"); break;
-            default: printf("Invalid!\n");
-        }
-    } while(choice!= 5);
-}
+Asset assets[MAX_ASSETS];
+int assetCount=0;
+void clearInputA(){int c;while((c=getchar())!='\n'&&c!=EOF);}
+int isEmptyString(char *s){if(strlen(s)==0)return 1;for(int i=0;s[i];i++){if(!isspace((unsigned char)s[i]))return 0;}return 1;}
+void assetMenu(){int ch;do{printf("\n--- ASSET MANAGEMENT (Student 4) ---\n1. Add Asset\n2. Display All\n3. Search Asset\n4. Asset Report\n5. Back\nChoice: ");scanf("%d",&ch);clearInputA();switch(ch){case 1:addAsset();break;case 2:displayAssets();break;case 3:searchAsset();break;case 4:assetReport();break;case 5:return;default:printf("Invalid!\n");}}while(ch!=5);}
+void addAsset(){if(assetCount>=MAX_ASSETS){printf("Full!\n");return;}Asset n;printf("Asset ID: ");scanf("%d",&n.assetID);clearInputA();for(int i=0;i<assetCount;i++)if(assets[i].assetID==n.assetID){printf("Duplicate ID!\n");return;}printf("Name: ");fgets(n.assetName,50,stdin);n.assetName[strcspn(n.assetName,"\n")]=0;if(isEmptyString(n.assetName)){printf("Empty!\n");return;}printf("Type: ");fgets(n.assetType,30,stdin);n.assetType[strcspn(n.assetType,"\n")]=0;printf("Value: ");scanf("%f",&n.purchaseValue);clearInputA();if(n.purchaseValue<0){printf("Negative!\n");return;}printf("Dept: ");fgets(n.department,30,stdin);n.department[strcspn(n.department,"\n")]=0;printf("Condition: ");fgets(n.condition,20,stdin);n.condition[strcspn(n.condition,"\n")]=0;assets[assetCount++]=n;printf("Added! Total %d\n",assetCount);}
+void displayAssets(){if(assetCount==0){printf("No assets\n");return;}printf("\n%-6s %-20s %-12s %-10s %-12s %-10s\n","ID","Name","Type","Value","Dept","Cond");for(int i=0;i<assetCount;i++)printf("%-6d %-20s %-12s %-10.2f %-12s %-10s\n",assets[i].assetID,assets[i].assetName,assets[i].assetType,assets[i].purchaseValue,assets[i].department,assets[i].condition);}
+void searchAsset(){int o;printf("Search 1.ID 2.Dept 3.Type: ");scanf("%d",&o);clearInputA();if(o==1){int id;printf("ID: ");scanf("%d",&id);clearInputA();for(int i=0;i<assetCount;i++)if(assets[i].assetID==id){printf("Found %s %.2f\n",assets[i].assetName,assets[i].purchaseValue);return;}printf("Not found\n");}else if(o==2){char d[30];printf("Dept: ");fgets(d,30,stdin);d[strcspn(d,"\n")]=0;for(int i=0;i<assetCount;i++)if(strcmp(assets[i].department,d)==0)printf("%d %s %.2f\n",assets[i].assetID,assets[i].assetName,assets[i].purchaseValue);}else{char t[30];printf("Type: ");fgets(t,30,stdin);t[strcspn(t,"\n")]=0;for(int i=0;i<assetCount;i++)if(strcmp(assets[i].assetType,t)==0)printf("%d %s %.2f\n",assets[i].assetID,assets[i].assetName,assets[i].purchaseValue);}}
+void assetReport(){float tot=0;for(int i=0;i<assetCount;i++)tot+=assets[i].purchaseValue;printf("\n--- REPORT ---\nTotal: %d\nValue: N$ %.2f\n",assetCount,tot);}
+int getAssetCount(){return assetCount;}
+float getTotalAssetValue(){float t=0;for(int i=0;i<assetCount;i++)t+=assets[i].purchaseValue;return t;}
+Asset* getAssetsArray(){return assets;}

@@ -2,13 +2,12 @@
 #define ASSETS_H
 #define MAX_ASSETS 100
 typedef struct {
-    int assetId;
+    int assetID;
     char assetName[50];
-    char category[30];
-    char location[30];
-    double value;
-    char purchaseDate[15];
-    char status[20];
+    char assetType[30];
+    float purchaseValue;
+    char department[30];
+    char condition[20];
 } Asset;
-void manageAssets();
+void assetMenu(); void addAsset(); void displayAssets(); void searchAsset(); void assetReport(); int getAssetCount(); float getTotalAssetValue(); Asset* getAssetsArray();
 #endif
