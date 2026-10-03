@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "validation.h"
+#include "reports.h"
 
 int main(void) {
     int choice;
@@ -30,9 +31,13 @@ int main(void) {
             case 4:
                 printf("\n--- Asset Management ---\n");
                 break;
-            case 5:
-                printf("\n--- Reports ---\n");
-                break;
+            case 5:   
+            printf("\n--- Reports ---\n");
+            employeeReport();
+            budgetReport();
+            supplierReport();
+            assetReport();
+            break;
             case 6:
                 printf("\nExiting system. Goodbye!\n");
                 break;

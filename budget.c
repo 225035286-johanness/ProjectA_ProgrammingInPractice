@@ -92,26 +92,5 @@ void searchDepartment() {
     }
 }
 
-int main() {
-    int choice;
-    do {
-        printf("\n--- Budget Management ---\n");
-        printf("1. Add Department\n");
-        printf("2. Display Departments\n");
-        printf("3. Search Department\n");
-        
-        printf("Choice: ");
-        scanf("%d", &choice);
 
-        switch (choice) {
-            case 1: addDepartment(); break;
-            case 2: displayDepartments(); break;
-            case 3: searchDepartment(); break;
-            
-            default: printf("Invalid choice.\n");
-        }
-    } while (choice >= 1 && choice <= 3);
-
-    return 0;
-}
 
